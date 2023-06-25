@@ -1,15 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Tic-Tac-Toe</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="shortcut icon" type="image/jpg" href="images/library-favicon.png">
-    <script src="https://kit.fontawesome.com/488c4a5056.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="shortcut icon"
+      type="image/jpg"
+      href="images/library-favicon.png"
+    />
+    <script
+      src="https://kit.fontawesome.com/488c4a5056.js"
+      crossorigin="anonymous"
+    ></script>
     <script src="main.js" defer></script>
-</head>
-<body>
-    
-</body>
+  </head>
+  <body>
+    <header>TIC TAC TOE</header>
+    <main>
+      <div class="top">
+        <div class="difficulty">
+          <label for="difficulty">Difficulty: </label>
+          <select id="difficulty">
+            <option value="easy" selected>Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+            <option value="impossible">Impossible</option>
+          </select>
+        </div>
+        <div class="token">
+          <label for="token-selector">Choose your token: </label>
+          <select name="token-selector" id="token-selector">
+            <option value="x">x</option>
+            <option value="o">o</option>
+          </select>
+        </div>
+        <div class="players">
+          <input type="text" name="player" id="player" placeholder="Player" />
+          <p>vs</p>
+          <input
+            type="text"
+            name="computer"
+            id="computer"
+            placeholder="Computer"
+          />
+        </div>
+      </div>
+      <div class="board">
+          <div class="game-board">
+            <button class="1"></button>
+            <button class="2"></button>
+            <button class="3"></button>
+            <button class="4"></button>
+            <button class="5"></button>
+            <button class="6"></button>
+            <button class="7"></button>
+            <button class="8"></button>
+            <button class="9"></button>
+          </div>
+      </div>
+      <button type="button" class="restart">RESTART</button>
+    </main>
+    <footer>
+      <p>Made by victorbadanau</p>
+      <a href="https://github.com/victorbadanau" target="_blank">
+        <i class="fab fa-github"></i>
+      </a>
+      <a href="https://github.com/victorbadanau/library">
+        <i class="fa-solid fa-code"></i>
+      </a>
+    </footer>
+  </body>
 </html>
