@@ -93,6 +93,16 @@ function ScreenController() {
       });
     });
   }
+  
+  function clickHandler(e) {
+    const selectedRow = e.target.dataset.row;
+    const selectedColumn = e.target.dataset.column;
+    if (!selectedRow || !selectedColumn) return;
+    game.playRound(selectedRow, selectedColumn);
+    updateScreen();
+  }
+
+  boardDiv.addEventListener("pointerdown", clickHandler);
 
   updateScreen();
 }
