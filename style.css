@@ -87,10 +87,12 @@ select {
 }
 
 .game-board button {
-  width: 4em;
-  height: 4em;
+  width: 2em;
+  height: 2em;
   background-color: var(--board);
   border: none;
+  font-size: 1.5em;
+  padding: 0;
 }
 
 .restart {
