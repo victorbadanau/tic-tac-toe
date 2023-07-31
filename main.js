@@ -2,8 +2,6 @@ const gameBoard = document.querySelector(".game-board");
 const restart = document.querySelector(".restart");
 const tokenSelector = document.getElementById("token-selector");
 const levelSelector = document.querySelector("#difficulty");
-const playerInput = document.getElementById("player");
-const computerInput = document.getElementById("computer");
 const level = document.querySelector("#difficulty").value;
 
 function GameBoard() {
@@ -60,24 +58,6 @@ function GameController() {
     return ["o", "x"];
   }
 
-  function getPlayerNames() {
-    let player = playerInput.value;
-    let computer = computerInput.value;
-    if (player == "") {
-      player = playerInput.placeholder;
-    }
-    if (computer == "") {
-      computer = computerInput.placeholder;
-    }
-    return [player, computer];
-  }
-
-  function getPlayers() {
-    let playerOne = { name: getPlayerNames()[0], token: getToken()[0] };
-    let playerTwo = { name: getPlayerNames()[1], token: getToken()[1] };
-    return [playerOne, playerTwo];
-  }
-
   function availableCells(board) {
     let emptyRows = [];
     let emptyColumns = [];
@@ -100,19 +80,22 @@ function GameController() {
       let randomCell = Math.floor(Math.random() * cells[0].length);
       rowIndex = cells[0][randomCell];
       columnIndex = cells[1][randomCell];
+    } else if (level == "medium") {
+    } else if (level == "hard") {
+    } else if (level == "impossible") {
     }
     if (rowIndex == undefined) return;
     return [rowIndex, columnIndex];
   }
 
   function playerMove(row, column) {
-    gameBoard.placeToken(row, column, getPlayers()[0].token);
+    gameBoard.placeToken(row, column, getToken()[0]);
   }
 
   function computerMove(board) {
     let cell = computerChoice(board);
     if (cell == undefined) return;
-    gameBoard.placeToken(cell[0], cell[1], getPlayers()[1].token);
+    gameBoard.placeToken(cell[0], cell[1], getToken()[1]);
   }
 
   function firstMove(board, token) {
@@ -154,34 +137,20 @@ function GameController() {
     return array;
   }
 
-  function winningPlayer() {
-    let playerOne = getPlayers()[0];
-    let playerTwo = getPlayers()[1];
-    if (playerOne.token == "x") {
-      return [playerOne.name, playerTwo.name];
-    }
-    return [playerTwo.name, playerOne.name];
-  }
-
-  function winner(board, func) {
+  function winner(board, win, lose) {
     let xRow = row(board, "x");
     let xColumn = column(board, "x");
     let xDiagonal = diagonal(board, "x");
     let oRow = row(board, "o");
     let oColumn = column(board, "o");
     let oDiagonal = diagonal(board, "o");
-    let xPlayer = winningPlayer()[0];
-    let oPlayer = winningPlayer()[1];
-    if (xRow.length !== 0 || xColumn.length !== 0 || xDiagonal.length !== 0) {
-      console.log(`${xPlayer} wins!`);
-      func();
-    } else if (
-      oRow.length !== 0 ||
-      oColumn.length !== 0 ||
-      oDiagonal.length !== 0
-    ) {
-      console.log(`${oPlayer} wins!`);
-      func();
+    let player = getToken()[0];
+    let x = xRow.length !== 0 || xColumn.length !== 0 || xDiagonal.length !== 0;
+    let o = oRow.length !== 0 || oColumn.length !== 0 || oDiagonal.length !== 0;
+    if ((x && player === "x") || (o && player === "o")) {
+      win();
+    } else if ((x && player === "o") || (o && player === "x")) {
+      lose();
     }
     return;
   }
@@ -197,8 +166,22 @@ function GameController() {
 }
 
 function ScreenController() {
+  const winModal = document.querySelector(".win-modal");
+  const overlay = document.querySelector(".overlay");
   let game = GameController();
   let board = game.getBoard();
+  let winner;
+
+  function openWinModal() {
+    winModal.classList.add("active");
+    overlay.classList.add("active");
+  }
+
+  function closeWinModal() {
+    winModal.textContent = "";
+    winModal.classList.remove("active");
+    overlay.classList.remove("active");
+  }
 
   function updateScreen() {
     gameBoard.textContent = "";
@@ -217,27 +200,43 @@ function ScreenController() {
   function clickHandler(e) {
     const selectedRow = e.target.dataset.row;
     const selectedColumn = e.target.dataset.column;
-
-    if (e.target.textContent || !selectedRow) return;
+    let token = e.target.textContent;
+    if (winner || token || !selectedRow) return;
     game.playerMove(selectedRow, selectedColumn);
     updateScreen();
+    game.winner(board, win, lose);
+    if (winner) return;
     game.computerMove(board);
     setTimeout(updateScreen, 150);
-    game.winner(board, gameFlow);
+    game.winner(board, win, lose);
   }
 
-  function gameFlow() {
+  function win() {
+    winner = 1;
+    winModal.textContent = "You Win!";
+    openWinModal();
+  }
+  
+  function lose() {
+    winner = 1;
+    winModal.textContent = "You Lose!";
+    openWinModal();
+  }
+
+  function reset() {
+    winner = undefined;
+    winModal.textContent = "";
     game.reset();
     game.firstMove(board, tokenSelector.value);
     setTimeout(updateScreen, 150);
   }
 
   gameBoard.addEventListener("pointerdown", clickHandler);
-  restart.addEventListener("pointerdown", gameFlow);
-  tokenSelector.addEventListener("change", gameFlow);
-  levelSelector.addEventListener("change", gameFlow);
-  playerInput.addEventListener("input", gameFlow);
-  computerInput.addEventListener("input", gameFlow);
+  restart.addEventListener("pointerdown", reset);
+  tokenSelector.addEventListener("change", reset);
+  levelSelector.addEventListener("change", reset);
+  overlay.addEventListener("pointerdown", closeWinModal);
+  overlay.addEventListener("pointerdown", reset);
 
   updateScreen();
 }

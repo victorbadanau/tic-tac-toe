@@ -40,16 +40,26 @@ main {
   background-color: var(--main);
   place-self: start center;
   display: grid;
-  grid-template-rows: 1fr 5fr 1fr;
+  grid-template-rows: 1fr 3fr 1fr;
 }
 
 .top {
+  margin: 0.5em;
   display: grid;
   grid: repeat(2, 1fr) / repeat(2, 1fr);
   place-items: center;
 }
 
-#difficulty, #token-selector, .players input {
+.top > * {
+  padding: 0.5em;
+}
+
+.wiki {
+  text-decoration: none;
+}
+
+#difficulty,
+#token-selector {
   border-radius: 0.25em;
   border: none;
   outline: none;
@@ -60,19 +70,10 @@ select {
   background-color: var(--input);
 }
 
-.players {
+.info {
   grid-column: span 2;
-  display: flex;
-  gap: 1em;
-  justify-content: center;
-  align-items: center;
-}
-
-.players input {
-  text-align: center;
-  width: 100px;
-  height: 20px;
-  background-color: var(--input);
+  align-self: center;
+  justify-self: center;
 }
 
 .board {
@@ -127,6 +128,41 @@ footer {
 
 button:hover {
   cursor: pointer;
+}
+
+.win-modal {
+  background-color: var(--main);
+  border-radius: 0.75em;
+  width: 200px;
+  height: 100px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 1;
+  top: calc(50% - 135px);
+  left: calc(50% - 100px);
+  font-family: "title", Impact, "Arial Narrow Bold", sans-serif;
+  transform: scale(0);
+  transition: 0.2s ease-in-out;
+}
+
+.win-modal.active {
+  transform: scale(1);
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.overlay.active {
+  display: block;
 }
 
 footer {
