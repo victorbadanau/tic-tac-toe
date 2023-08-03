@@ -18,33 +18,41 @@
   </head>
   <body>
     <header>TIC TAC TOE</header>
-    <main>
-      <div class="top">
-        <div class="difficulty">
-          <label for="difficulty">Difficulty: </label>
-          <select id="difficulty">
-            <option value="easy" selected>Easy</option>
-            <option value="medium">Medium</option>
-            <option value="hard">Hard</option>
-            <option value="impossible">Impossible</option>
-          </select>
+    <div class="main">
+      <main>
+        <div class="top">
+          <div class="difficulty">
+            <label for="difficulty">Difficulty: </label>
+            <select id="difficulty">
+              <option value="easy" selected>Easy</option>
+              <option value="medium">Medium</option>
+              <option value="hard">Hard</option>
+              <option value="impossible">Impossible</option>
+            </select>
+          </div>
+          <div class="token">
+            <label for="token-selector">Choose your token: </label>
+            <select name="token-selector" id="token-selector">
+              <option value="x">X</option>
+              <option value="o">O</option>
+            </select>
+          </div>
+          <div class="info">
+            As
+            <a class="wiki" href="https://en.wikipedia.org/wiki/Tic-tac-toe"
+              >wikipedia</a
+            >
+            rule states, X goes first!
+          </div>
         </div>
-        <div class="token">
-          <label for="token-selector">Choose your token: </label>
-          <select name="token-selector" id="token-selector">
-            <option value="x">X</option>
-            <option value="o">O</option>
-          </select>
+        <div class="board">
+          <div class="game-board"></div>
         </div>
-        <div class="info">
-         As <a class="wiki" href="https://en.wikipedia.org/wiki/Tic-tac-toe">wikipedia</a> rule states, X goes first!
-        </div>
-      </div>
-      <div class="board">
-        <div class="game-board"></div>
-      </div>
-      <button type="button" class="restart">RESTART</button>
-    </main>
+        <button type="button" class="restart">RESTART</button>
+      </main>
+      <div class="win-modal"></div>
+      <div class="overlay"></div>
+    </div>
     <footer>
       <p>Made by victorbadanau</p>
       <a href="https://github.com/victorbadanau" target="_blank">
@@ -54,7 +62,5 @@
         <i class="fa-solid fa-code"></i>
       </a>
     </footer>
-    <div class="win-modal"></div>
-    <div class="overlay"></div>
   </body>
 </html>

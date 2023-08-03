@@ -43,6 +43,11 @@ main {
   grid-template-rows: 1fr 3fr 1fr;
 }
 
+.main {
+  align-self: start;
+  justify-self: center;
+}
+
 .top {
   margin: 0.5em;
   display: grid;
@@ -138,17 +143,20 @@ button:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  position: absolute;
+  position: relative;
   z-index: 1;
-  top: calc(50% - 135px);
-  left: calc(50% - 100px);
+  top: -160px;
+  left: 50%;
   font-family: "title", Impact, "Arial Narrow Bold", sans-serif;
+  font-weight: bold;
+  font-size: 1.5em;
   transform: scale(0);
   transition: 0.2s ease-in-out;
 }
 
 .win-modal.active {
-  transform: scale(1);
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 60%;
 }
 
 .overlay {
