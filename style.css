@@ -4,6 +4,7 @@
   --main: #ccfbf1;
   --board: #5eead4;
   --github: #222222;
+  --doc-height: 100%;
 }
 
 @font-face {
@@ -16,11 +17,20 @@
   src: url(fonts/PTSerifCaption-Italic.ttf);
 }
 
-body {
-  width: 100vw;
-  height: 100vh;
+* {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  height: var(--doc-height);
+}
+
+body {
+  width: 100%;
+  min-height: 100%;
   display: grid;
   grid-template-rows: 1fr 3fr 6em;
 }
@@ -171,6 +181,9 @@ button:hover {
 
 .overlay.active {
   display: block;
+}
+
+@media only screen and (max-width: 600px) {
 }
 
 footer {

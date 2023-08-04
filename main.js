@@ -3,6 +3,13 @@ const restart = document.querySelector(".restart");
 const tokenSelector = document.getElementById("token-selector");
 const levelSelector = document.querySelector("#difficulty");
 
+const documentHeight = () => {
+  const doc = document.documentElement;
+  doc.style.setProperty("--doc-height", `${window.innerHeight}px`);
+};
+window.addEventListener("resize", documentHeight);
+documentHeight();
+
 function GameBoard() {
   const rows = 3;
   const columns = 3;
@@ -94,6 +101,90 @@ function GameController() {
     return [emptyRows, emptyColumns, emptyCellIndexes, gameBoard];
   }
 
+  function getRows(board, player) {
+    let rows = [[], [], []];
+    let index = [[], [], []];
+    for (let i = 0; i < board.length; i++) {
+      for (let j = 0; j < board.length; j++) {
+        if (board[i][j].getValue() === player) {
+          rows[i].push(player);
+        }
+        if (board[i][j].getValue() == "") {
+          index[i].push(i);
+          index[i].push(j);
+        }
+      }
+    }
+    for (let i = 0; i < rows.length; i++) {
+      if (rows[i].length == 2 && index[i].length == 2) {
+        return [true, index[i][0], index[i][1]];
+      }
+    }
+    return [false];
+  }
+
+  function transpose(matrix) {
+    return matrix.map((value, column) => matrix.map((row) => row[column]));
+  }
+
+  function getColumns(board, player) {
+    let newBoard = transpose(board);
+    let columns = [[], [], []];
+    let index = [[], [], []];
+    for (let i = 0; i < newBoard.length; i++) {
+      for (let j = 0; j < newBoard.length; j++) {
+        if (newBoard[i][j].getValue() === player) {
+          columns[i].push(player);
+        }
+        if (newBoard[i][j].getValue() == "") {
+          index[i].push(j);
+          index[i].push(i);
+        }
+      }
+    }
+    for (let i = 0; i < columns.length; i++) {
+      if (columns[i].length == 2 && index[i].length == 2) {
+        return [true, index[i][0], index[i][1]];
+      }
+    }
+    return [false];
+  }
+
+  function getDiagonals(board, player) {
+    let newBoard = [
+      [board[0][0], board[1][1], board[2][2]],
+      [board[2][0], board[1][1], board[0][2]],
+    ];
+    let diagonals = [[], []];
+    let index = [[], []];
+    for (let i = 0; i < newBoard.length; i++) {
+      for (let j = 0; j < newBoard[i].length; j++) {
+        if (newBoard[i][j].getValue() === player) {
+          diagonals[i].push(player);
+        }
+        if (
+          (newBoard[i][j].getValue() == "" && i == 0) ||
+          (newBoard[i][j].getValue() == "" && i == 1 && j == 1)
+        ) {
+          index[i].push(j);
+          index[i].push(j);
+        } else if (newBoard[i][j].getValue() == "" && i == 1 && j == 0) {
+          index[i].push(2);
+          index[i].push(j);
+        } else if (newBoard[i][j].getValue() == "" && i == 1 && j == 2) {
+          index[i].push(0);
+          index[i].push(j);
+        }
+      }
+    }
+    for (let i = 0; i < diagonals.length; i++) {
+      if (diagonals[i].length == 2 && index[i].length == 2) {
+        return [true, index[i][0], index[i][1]];
+      }
+    }
+    return [false];
+  }
+
   function computerChoice(board) {
     const level = document.querySelector("#difficulty").value;
     const matrix = [
@@ -111,6 +202,12 @@ function GameController() {
     let boardArray = currentBoard[3];
     let human = getToken()[0];
     let computer = getToken()[1];
+    let row = getRows(board, human);
+    let column = getColumns(board, human);
+    let diagonal = getDiagonals(board, human);
+    let cRow = getRows(board, computer);
+    let cColumn = getColumns(board, computer);
+    let cDiagonal = getDiagonals(board, computer);
     let rowIndex;
     let columnIndex;
     if (level == "easy") {
@@ -118,10 +215,46 @@ function GameController() {
       rowIndex = currentBoard[0][randomCell];
       columnIndex = currentBoard[1][randomCell];
     } else if (level == "medium") {
+      if (row[0] == true) {
+        rowIndex = row[1];
+        columnIndex = row[2];
+      } else if (column[0] == true) {
+        rowIndex = column[1];
+        columnIndex = column[2];
+      } else if (diagonal[0] == true) {
+        rowIndex = diagonal[1];
+        columnIndex = diagonal[2];
+      } else {
+        let randomCell = Math.floor(Math.random() * currentBoard[0].length);
+        rowIndex = currentBoard[0][randomCell];
+        columnIndex = currentBoard[1][randomCell];
+      }
     } else if (level == "hard") {
+      if (cRow[0] == true) {
+        rowIndex = cRow[1];
+        columnIndex = cRow[2];
+      } else if (cColumn[0] == true) {
+        rowIndex = cColumn[1];
+        columnIndex = cColumn[2];
+      } else if (cDiagonal[0] == true) {
+        rowIndex = cDiagonal[1];
+        columnIndex = cDiagonal[2];
+      } else if (row[0] == true) {
+        rowIndex = row[1];
+        columnIndex = row[2];
+      } else if (column[0] == true) {
+        rowIndex = column[1];
+        columnIndex = column[2];
+      } else if (diagonal[0] == true) {
+        rowIndex = diagonal[1];
+        columnIndex = diagonal[2];
+      } else {
+        let randomCell = Math.floor(Math.random() * currentBoard[0].length);
+        rowIndex = currentBoard[0][randomCell];
+        columnIndex = currentBoard[1][randomCell];
+      }
     } else if (level == "impossible") {
       let choice = minimax(boardArray, computer);
-      console.log(choice);
       rowIndex = matrix[choice.index][0];
       columnIndex = matrix[choice.index][1];
     }
@@ -196,7 +329,7 @@ function GameController() {
     }
     let bestMove;
     if (player === computer) {
-      let bestScore = -10000;
+      let bestScore = -100;
       for (let i = 0; i < moves.length; i++) {
         if (moves[i].score > bestScore) {
           bestScore = moves[i].score;
@@ -204,7 +337,7 @@ function GameController() {
         }
       }
     } else {
-      let bestScore = 10000;
+      let bestScore = 100;
       for (let i = 0; i < moves.length; i++) {
         if (moves[i].score < bestScore) {
           bestScore = moves[i].score;
